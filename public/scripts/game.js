@@ -1,62 +1,61 @@
-// Get all card elements
-const cards = document.querySelectorAll('.card');
 let flippedCards = [];
-let matchedPairs = 0;
+let matchedCards = 0;
+const cards = document.querySelectorAll('.card');
+const resetButton = document.querySelector('.reset-btn');
 
-// Function to flip all cards face-down
-function hideAllCards() {
-  cards.forEach(card => card.classList.remove('visible'));
-}
+// Handle card click event
+cards.forEach(card => {
+    card.addEventListener('click', () => {
+        if (flippedCards.length < 2 && !card.classList.contains('revealed')) {
+            card.classList.add('revealed');
+            flippedCards.push(card);
 
-// Initially, show all cards for memorization
-function showAllCards() {
-  cards.forEach(card => card.classList.add('visible'));
+            if (flippedCards.length === 2) {
+                checkForMatch();
+            }
+        }
+    });
+});
 
-  // After 5 seconds, flip all cards face-down
-  setTimeout(hideAllCards, 5000);
-}
+// Check if the two flipped cards match
+function checkForMatch() {
+    const [card1, card2] = flippedCards;
 
-// Start the game by showing all cards for memorization
-showAllCards();
+    if (card1.querySelector('.card-back').textContent === card2.querySelector('.card-back').textContent) {
+        matchedCards += 2;
+        flippedCards = [];
 
-// Function to flip a card when clicked
-function flipCard(event) {
-  const card = event.target;
-
-  if (card.classList.contains('visible') || flippedCards.length === 2) {
-    return;
-  }
-
-  card.classList.add('visible');
-  flippedCards.push(card);
-
-  if (flippedCards.length === 2) {
-    checkMatch();
-  }
-}
-
-// Function to check if two flipped cards match
-function checkMatch() {
-  const [card1, card2] = flippedCards;
-
-  if (card1.dataset.value === card2.dataset.value) {
-    // Cards match; keep them visible
-    matchedPairs += 1;
-    flippedCards = [];
-
-    // Check if game is won
-    if (matchedPairs === cards.length / 2) {
-      setTimeout(() => alert("Congratulations! You've matched all pairs!"), 300);
+        if (matchedCards === cards.length) {
+            setTimeout(() => alert('Congratulations, you won!'), 500);
+        }
+    } else {
+        setTimeout(() => {
+            card1.classList.remove('revealed');
+            card2.classList.remove('revealed');
+            flippedCards = [];
+        }, 1000);
     }
-  } else {
-    // No match; flip cards back after a short delay
-    setTimeout(() => {
-      card1.classList.remove('visible');
-      card2.classList.remove('visible');
-      flippedCards = [];
-    }, 1000);
-  }
 }
 
-// Add event listener to each card
-cards.forEach(card => card.addEventListener('click', flipCard));
+// Reset the game
+resetButton.addEventListener('click', () => {
+    cards.forEach(card => {
+        card.classList.remove('revealed');
+    });
+
+    matchedCards = 0;
+    flippedCards = [];
+    shuffleCards();
+});
+
+// Shuffle cards function
+function shuffleCards() {
+    const shuffledCards = Array.from(cards);
+    shuffledCards.sort(() => Math.random() - 0.5);
+    shuffledCards.forEach((card, index) => {
+        card.style.order = index;
+    });
+}
+
+// Initial shuffle when the game loads
+shuffleCards();
