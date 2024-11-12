@@ -16,3 +16,15 @@ Game Reset: Players can reset the game, shuffling cards to start fresh.
 <p>CSS: Styling for game layout, card appearance, and animations.</p>
 <p>JavaScript: Client-side code for handling card flips and matching logic.</p>
 
+<h2>Installation and Setup</h2>
+<h3>Clone the Repository</h3>
+<P>git clone https://github.com/your-username/card-guessing-game.git <br>
+cd card-guessing-game
+</P>
+<h3>Install Dependencies</h3>
+<P>npm install</P>
+<h3>Start the Server
+</h3>
+<P>npm start
+</P>
+
